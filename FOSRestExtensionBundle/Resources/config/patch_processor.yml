@@ -1,0 +1,25 @@
+services:
+    scfos_rest_extension.path_decoder: # We register this service in here cause it's meant to be used only by the patch_processor
+        class: SC\FOSRestExtensionBundle\PathDecoder\PathDecoder
+        public: false
+    scfos_rest_extension.patch_request.processor:
+        class: SC\FOSRestExtensionBundle\Processor\PatchRequestProcessor
+        public: true
+        arguments:
+            $p_decoder: "@scfos_rest_extension.path_decoder"
+            $container: "@service_container"
+    scfos_rest_extension.patch_request.parser:
+        class: SC\FOSRestExtensionBundle\Parser\PatchRequestParser
+        public: false
+        arguments:
+            $router: "@router"
+            $em: "@doctrine.orm.entity_manager"
+            $processor: "@scfos_rest_extension.patch_request.processor"
+            $serializer: "@jms_serializer"
+    scfos_rest_extension.patch_request.listener:
+        class: SC\FOSRestExtensionBundle\EventListener\PatchRequestListener
+        public: false
+        arguments:
+            $parser: "@scfos_rest_extension.patch_request.parser"
+        tags:
+            - {name: "kernel.event_listener", event: "kernel.controller", method: "parseRequest"}

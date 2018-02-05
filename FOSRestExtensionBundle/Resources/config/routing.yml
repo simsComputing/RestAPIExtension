@@ -1,0 +1,3 @@
+scfos_rest_extension_homepage:
+    path:     /
+    defaults: { _controller: SCFOSRestExtensionBundle:Default:index }

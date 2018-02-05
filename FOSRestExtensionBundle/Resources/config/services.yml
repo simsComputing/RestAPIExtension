@@ -1,0 +1,6 @@
+services:
+    scfos_rest_extension.query_filters:
+        class: SC\FOSRestExtensionBundle\QueryFilter\QueryFilterGeneric
+        arguments:
+            $stack: "@request_stack"
+            $container: "@service_container"

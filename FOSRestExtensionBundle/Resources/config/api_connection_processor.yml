@@ -1,0 +1,19 @@
+services:
+        scfos_rest_extension.api_connection_processor.user_manager:
+            alias: "fos_user.user_manager"
+            public: false
+        scfos_rest_extension.api_connection_processor.processor:
+            class: SC\FOSRestExtensionBundle\Processor\APIConnectionProcessor
+            arguments:
+                $user_manager: "@scfos_rest_extension.api_connection_processor.user_manager"
+                $token: "@security.token_storage"
+            public: false
+        scfos_rest_extension.api_connection_listener:
+            class: SC\FOSRestExtensionBundle\EventListener\APIConnectionListener
+            arguments:
+                $processor: "@scfos_rest_extension.api_connection_processor.processor"
+                $container: "@service_container"
+                $logger: "@monolog.logger"
+            tags:
+                - {name: kernel.event_listener, event: kernel.terminate, method: enableProcessor}
+        
